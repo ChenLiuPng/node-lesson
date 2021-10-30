@@ -16,13 +16,19 @@ const Promise = require('./promise.js');
 let p = new Promise((resolve,reject)=>{
     // throw new Error('1');
     // reject('失败了');
-    resolve('成功了!');
+    setTimeout(()=>{
+        resolve('失败了!');
+    },1008)
 });
 p.then((data)=>{
     console.log('success',data);
 },(error)=>{
     console.log('fail',error);
 })
+p.then((data)=>{
+    console.log('success',data);
+},(error)=>{
+    console.log('fail',error);
+})
 console.log(2)
-console.log(p)
 

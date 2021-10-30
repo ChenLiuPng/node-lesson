@@ -8,16 +8,20 @@ class Promise {
         this.status = STATUS.PENDING;
         this.value = undefined;
         this.reason = undefined;
+        this.onResolvedCallbacks = []; // 存放成功回调
+        this.onRejectedCallbacks = []; // 存放失败回调
         const resolve = (val) => {
             if(this.status == STATUS.PENDING){
                 this.status = STATUS.FUFILLED
                 this.value = val;
+                this.onResolvedCallbacks.forEach(fn=>fn());
             }
         }
         const reject = (reason) => {
             if(this.status == STATUS.PENDING){
                 this.status = STATUS.REJECTED
                 this.reason = reason;
+                this.onResolvedCallbacks.forEach(fn=>fn);
             }
         }
         try {
@@ -32,6 +36,14 @@ class Promise {
         }
         if(this.status == STATUS.REJECTED) {
             onRejected(this.reason);
+        }
+        if(this.status == STATUS.PENDING){
+            this.onResolvedCallbacks.push(()=>{
+                onFulfilled(this.value);
+            })
+            this.onRejectedCallbacks.push(()=>{
+                onRejected(this.reason);
+            })
         }
     }
 }
